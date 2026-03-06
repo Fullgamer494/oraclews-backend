@@ -6,7 +6,7 @@ const VALID_CATEGORIES = ['general', 'technology', 'business', 'sports', 'entert
 const VALID_COUNTRIES = ['mx'];
 const MAX_QUERY_LENGTH = 100;
 
-// Utilidad para estandarizar errores
+// utilidad para estandarizar errores
 const createError = (code: string, message: string, details: any = {}) => ({
     code,
     message,
@@ -20,13 +20,13 @@ export const getTopNews = async (req: Request, res: Response): Promise<void> => 
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 20;
 
-        // Validación: solo categorías permitidas
+        // validación: solo categorías permitidas
         if (!VALID_CATEGORIES.includes(category)) {
             res.status(400).json(createError('INVALID_CATEGORY', `Categoría no válida. Permitidas: ${VALID_CATEGORIES.join(', ')}`, { provided: category, allowed: VALID_CATEGORIES }));
             return;
         }
 
-        // Validación: solo países permitidos
+        // validación: solo mx
         if (!VALID_COUNTRIES.includes(country)) {
             res.status(400).json(createError('INVALID_COUNTRY', `País no válido. Permitidos: ${VALID_COUNTRIES.join(', ')}`, { provided: country, allowed: VALID_COUNTRIES }));
             return;
@@ -64,13 +64,13 @@ export const searchNews = async (req: Request, res: Response): Promise<void> => 
             return;
         }
 
-        // Validación: longitud máxima del query
+        // validación: longitud máxima del query
         if (q.length > MAX_QUERY_LENGTH) {
             res.status(400).json(createError('QUERY_TOO_LONG', `La búsqueda no puede exceder ${MAX_QUERY_LENGTH} caracteres.`, { providedLength: q.length, maxLength: MAX_QUERY_LENGTH }));
             return;
         }
 
-        // Sanitización: eliminar caracteres potencialmente peligrosos
+        // sanitización: eliminar caracteres especiales
         const sanitizedQuery = q.replace(/[<>{}]/g, '').trim();
 
         if (!sanitizedQuery) {
