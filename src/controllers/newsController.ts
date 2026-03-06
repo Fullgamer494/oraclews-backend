@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { NewsModel } from '../models/NewsModel';
 
-// Categorías permitidas por NewsAPI (whitelist para validación)
+// whitelists para validación
 const VALID_CATEGORIES = ['general', 'technology', 'business', 'sports', 'entertainment', 'health', 'science'];
-const VALID_COUNTRIES = ['us', 'mx', 'es', 'ar', 'co'];
+const VALID_COUNTRIES = ['mx'];
 const MAX_QUERY_LENGTH = 100;
 
 // Utilidad para estandarizar errores
@@ -16,7 +16,7 @@ const createError = (code: string, message: string, details: any = {}) => ({
 export const getTopNews = async (req: Request, res: Response): Promise<void> => {
     try {
         const category = (req.query.category as string) || 'general';
-        const country = (req.query.country as string) || 'us';
+        const country = (req.query.country as string) || 'mx';
         const page = parseInt(req.query.page as string) || 1;
         const limit = parseInt(req.query.limit as string) || 20;
 
