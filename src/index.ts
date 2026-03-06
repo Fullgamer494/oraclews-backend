@@ -22,7 +22,9 @@ const apiLimiter = rateLimit({
     standardHeaders: true,     // devuelve info de rate limit en headers `RateLimit-*`
     legacyHeaders: false,      // deshabilita headers `X-RateLimit-*`
     message: {
-        error: 'Demasiadas peticiones desde esta IP, intenta de nuevo en 15 minutos.',
+        code: 'RATE_LIMIT_EXCEEDED',
+        message: 'Demasiadas peticiones desde esta IP, intenta de nuevo en 15 minutos.',
+        details: {}
     },
 });
 

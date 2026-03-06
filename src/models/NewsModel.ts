@@ -31,10 +31,10 @@ export class NewsModel {
     }
 
     // top headlines
-    static async getTopHeadlines(category: string, country: string): Promise<NewsArticle[]> {
-        if (!this.apiKey) throw new Error("API_KEY no configurada");
+    static async getTopHeadlines(category: string, country: string, page: number = 1, pageSize: number = 20): Promise<{ articles: NewsArticle[], totalResults: number }> {
+        if (!this.apiKey) throw new Error("API_KEY_MISSING");
 
-        const url = `${this.baseUrl}/top-headlines?country=${country}&category=${category}&apiKey=${this.apiKey}`;
+        const url = `${this.baseUrl}/top-headlines?country=${country}&category=${category}&page=${page}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -42,14 +42,17 @@ export class NewsModel {
         }
 
         const data = await response.json();
-        return data.articles.map((article: any, index: number) => this.mapToArticle(article, index));
+        return {
+            articles: data.articles ? data.articles.map((article: any, index: number) => this.mapToArticle(article, index)) : [],
+            totalResults: data.totalResults || 0
+        };
     }
 
     // buscar noticias, pasar como query param
-    static async searchEverything(query: string): Promise<NewsArticle[]> {
-        if (!this.apiKey) throw new Error("API_KEY no configurada");
+    static async searchEverything(query: string, page: number = 1, pageSize: number = 20): Promise<{ articles: NewsArticle[], totalResults: number }> {
+        if (!this.apiKey) throw new Error("API_KEY_MISSING");
 
-        const url = `${this.baseUrl}/everything?q=${encodeURIComponent(query)}&apiKey=${this.apiKey}`;
+        const url = `${this.baseUrl}/everything?q=${encodeURIComponent(query)}&page=${page}&pageSize=${pageSize}&apiKey=${this.apiKey}`;
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -57,6 +60,9 @@ export class NewsModel {
         }
 
         const data = await response.json();
-        return data.articles.map((article: any, index: number) => this.mapToArticle(article, index));
+        return {
+            articles: data.articles ? data.articles.map((article: any, index: number) => this.mapToArticle(article, index)) : [],
+            totalResults: data.totalResults || 0
+        };
     }
 }
